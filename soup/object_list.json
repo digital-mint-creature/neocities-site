@@ -1,0 +1,154 @@
+[
+    {
+        "id": "Templates",
+        "children": [
+            "****",
+            "****!",
+            "****?",
+            "Cool ****...",
+            "What a worthless ****...",
+            "It might be ****...",
+            "**** ahead",
+            "Could it be...? ****?",
+            "Try ****",
+            "Time for ****",
+            "Behold, ****",
+            "There's only **** left",
+            "I'll show you my **** strategy!",
+            "Team **** is here!",
+            "Huh? ****?!",
+            "You're ****, aren't you?",
+            "I can do anything for ****!",
+            "I want a **** battle!",
+            "Victory in a **** battle!",
+            "The way I feel now is ****!",
+            "**** secured the victory!",
+            "Awww... That's really ****...",
+            "**** was the one thing I wanted to avoid...",
+            "Happy! **** happy!",
+            "My head's filled with only **** now!",
+            "Have you heard of ****?",
+            "This is it! The power of ****!",
+            "I see **** right in front of me!",
+            "Here's a hint: ****"
+        ]
+    },
+    {
+        "id": "TwoPhraseTemplates",
+        "children": [
+            "This **** is ****, isn't it?",
+            "Sorry, it's **** ****.",
+            "****!!! ****!!!!",
+            "Do you think **** can ****?",
+            "**** is the reason for ****.",
+            "**** is actually ****",
+            "When it comes to ****, my choice is always ****!",
+            "It's very **** and ****"
+        ]
+    },
+    {
+        "id": "Conjunctions",
+        "children": [
+            "and",
+            "and then",
+            "but",
+            "in short",
+            "by the way",
+            "therefore",
+            "because",
+            "after all,"
+        ]
+    },
+    {
+        "id": "Categories",
+        "children": [
+            "Things",
+            "People",
+            "Animals",
+            "Sayings",
+            "Attacks"
+        ],
+        "categories": [
+                        {
+                        "subId": "Things",
+                        "children": [
+                                "soup",
+                                "video game",
+                                "computer",
+                                "creature",
+                                "something",
+                                "nothing",
+                                "gay",
+                                "gender",
+                                "software",
+                                "train",
+                                "streaming",
+                                "copyright",
+                                "bone density",
+                                "spreadsheet",
+                                "words and deeds"
+                            ]
+                        },
+                        {
+                        "subId": "People",
+                        "children": [
+                                "Pancake",
+                                "digimint",
+                                "you",
+                                "me",
+                                "Agent 47",
+                                "Sonic the Hedgehog",
+                                "Hatsune Miku"
+                            ]
+                        },
+                        {
+                        "subId": "Animals",
+                        "children": [
+                            "dragon",
+                            "pupy",
+                            "frog",
+                            "skeleton",
+                            "horse",
+                            "egg",
+                            "the high elves",
+                            "girl's"
+                            ]
+                        },
+                        {
+                        "subId": "Sayings",
+                        "children": [
+                            "I'm gay",
+                            "they always get you with that",
+                            "Never Give Up!",
+                            "you don't have the right",
+                            "It's OK!",
+                            "I'm using tilt controls!",
+                            "Yeehaw!",
+                            "if you ask me"
+                        ]
+                        },
+                        {
+                        "subId": "Attacks",
+                        "children": [
+                            "holding with both hands",
+                            "eateing",
+                            "drinking",
+                            "cute laugh",
+                            "rawr",
+                            "meow",
+                            "nya",
+                            "awawa",
+                            "stock prices",
+                            "patting",
+                            "kick, punch",
+                            "SCIENCE!",
+                            "Cyclone Kick",
+                            "chaos control",
+                            "fight it out",
+                            "japes",
+                            "strong"
+                        ]
+                        }
+                    ]
+    }
+]

@@ -1,0 +1,525 @@
+<!--Welcome to the Soup Message source code! To add a new category:
+1. Open object_list.json. Create a new category under "categories" and fill it with the choices you want.
+2. Make sure to add the category under the "children" section above the categories too, otherwise it won't show up on the page.
+3. Following that, go down to where it says HERE and run the populateSubSelect function with your category name as the second argument, once with the third argument set to True and once with it set to False.
+4. Finally, go down to the "mamaCat" elements in the main HTML body and copy the code there into both of them for your new category. This is so it can be shown/hidden when the user selects categories.
+-->
+
+<html>
+<head>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<!--The below CSS hides all unselected dropdowns so they can be dynamically shown when chosen.-->
+<style>
+.hidden {
+    display: none;
+    position: absolute;
+}
+.hidden2 {
+    display: none;
+}
+.hidden3 {
+    display: none;
+    position: absolute;
+}
+.hidden4 {
+    display: none;
+}
+#credits {
+    top: 375%;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    text-align: center;
+    font-size:16px;
+}
+#readme {
+    position:absolute;
+    top: 320%;
+    left: 50%;
+    transform: translate(-50%)
+}
+
+#toggles {
+    text-align:center;
+}
+
+#message {
+    text-align:center;
+    font-size:20px;
+}
+
+select {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+h2 {
+text-align:center;
+}
+
+button {
+    position:absolute;
+    left:50%;
+    transform: translate(-50%);
+}
+</style>
+<div id="parent">
+<div id="child-wrapper" class="article">
+<h2>GENERATE YOUR SOUP MESSAGE</h2>
+
+<script type="module">
+    
+    let template1 = '\*\*\*\*'; //Module-wide template 1 string.
+    let template2 = ''; //Module-wide template 2 string.
+    let template3 = ''; //Module-wide template 3 string. (This is used for storing two-phrase templates.)
+    let phrase1 = ''; //Module-wide phrase 1 string.
+    let conjunction = ''; //Module-wide conjunction string.
+    let phrase2 = ''; //Module-wide phrase 2 string.
+    let personFlag = false; //This is a boolean to help with capitalization.
+
+    async function createArrayFromJSON() { //This function grabs data from the associated JSON file and converts it to a JS object for processing.
+                                            //Each select is populated by the function called at the end here.
+        const requestURL = "object_list.json";
+        const request = new Request(requestURL);
+
+        const response = await fetch(request);
+        const objectArrayText = await response.text()
+
+        const objectArray = JSON.parse(objectArrayText);
+        populateSelect(objectArray, 'Templates', false);
+        populateSelect(objectArray, 'Templates2', true);
+        populateSelect(objectArray, 'TwoPhraseTemplates', false);
+        populateSelect(objectArray, 'Categories', false);
+        populateSelect(objectArray, 'Categories2', true);
+        populateSelect(objectArray, 'Conjunctions', false); // HERE!
+        populateSubSelect(objectArray, 'Things', false);
+        populateSubSelect(objectArray, 'People', false);
+        populateSubSelect(objectArray, 'Animals', false);
+        populateSubSelect(objectArray, 'Sayings', false);
+        populateSubSelect(objectArray, 'Attacks', false);
+        populateSubSelect(objectArray, 'Things', true);
+        populateSubSelect(objectArray, 'People', true);
+        populateSubSelect(objectArray, 'Animals', true);
+        populateSubSelect(objectArray, 'Sayings', true);
+        populateSubSelect(objectArray, 'Attacks', true);
+    }
+    
+    function populateSelect(objectArray, category_id, is1) { //Find the section in the JSON file associated with a given category and put it in a select element.
+        let category_scrubbed = category_id;
+        if (is1) {
+        category_scrubbed = category_id.replace(/2/, '');
+        }
+        const categoryIndex = objectArray.findIndex((o => o.id === category_scrubbed));
+        const categoryChildren = Array.from(objectArray[categoryIndex].children);
+        var select = document.getElementById(category_id);
+        for (var i = 0; i < categoryChildren.length; i++) {
+            var option = document.createElement('option');
+            option.innerHTML = categoryChildren[i];
+            option.value = categoryChildren[i];
+            select.appendChild(option);
+        }
+        select.value = "0";
+    }
+
+    function populateSubSelect(objectArray, category_id, is2) { //Find the section in the JSON file associated with a given subcategory and put it in a select element.
+        const categoryIndex = objectArray[3].categories;
+        const categorySubIndex = categoryIndex.findIndex(o => o.subId === category_id);
+        const categoryChildren = Array.from(categoryIndex[categorySubIndex].children);
+        var sel = '';
+        if (is2) {
+            sel = category_id.concat("_select2");
+        }
+        else {
+            sel = category_id.concat("_select");
+        }
+        var select = document.getElementById(sel);
+        for (var i = 0; i < categoryChildren.length; i++) {
+            var option = document.createElement('option');
+            option.innerHTML = categoryChildren[i];
+            option.value = categoryChildren[i];
+            select.appendChild(option);
+        }
+        select.value = "0";
+    }
+
+    function showHide() { //Shows or hides each category depending on whether it's selected.
+        const sel = document.getElementById("Categories");
+        sel.onchange = function() {
+        if (sel.value !== null) {
+            const allDivs = document.getElementsByClassName("hidden")
+            for (var i = 0; i < allDivs.length; i++) {
+             allDivs[i].style.display = "none";
+             allDivs[i].value = "";
+             }
+         }
+        document.getElementById(sel.value).style.display = "inline-block";
+        }
+    }
+
+    function showHide2() { //Shows or hides each category depending on whether it's selected. (For the second phrase)
+        const sel = document.getElementById("Categories2");
+        sel.onchange = function() {
+        if (sel.value !== null) {
+            const allDivs = document.getElementsByClassName("hidden3")
+            for (var i = 0; i < allDivs.length; i++) {
+             allDivs[i].style.display = "none";
+             allDivs[i].value = "";
+             }
+         }
+        const show2 = sel.value.concat('2');
+        document.getElementById(show2).style.display = "inline-block";
+        }
+    }
+
+    function simpleListener() {
+        const check = document.getElementById("simple_toggle");
+        check.onchange = function() {
+            simpleComplex()
+        }
+    }
+    function simpleComplex() {
+        const check = document.getElementById("simple_toggle");
+        const check2 = document.getElementById("twophrase_toggle");
+        const compconj = document.getElementById("compconj");
+        const comptemp = document.getElementById("comptemp");
+        const compcat = document.getElementById("compcat");
+        const mamaCat2 = document.getElementById("mamaCat2");
+        const onephrasetemp = document.getElementById("onephrase");
+        const twophrasetemp = document.getElementById("twophrase"); 
+        if (check.checked) {
+                check2.checked = false;
+                compconj.style.display = "inline-block";
+                comptemp.style.display = "inline-block";
+                compcat.style.display = "inline-block";
+                mamaCat2.style.paddingLeft = "558px";
+                onephrasetemp.style.display = "inline-block";
+                twophrasetemp.style.display = "none";
+                if (template1 !== "") {  
+                    phraseHandler();
+                }
+            }
+            else {
+                compconj.style.display = "none";
+                comptemp.style.display = "none";
+                compcat.style.display = "none";
+                mamaCat2.style.paddingLeft = "284px";
+                conjunction = '';
+                phrase2 = '';
+                template2 = '';
+                if (phrase1 === '') {
+                    phrase1 = "soup";
+                }
+                phraseHandler();
+                const allDivs = document.getElementsByClassName("hidden3")
+                for (var i = 0; i < allDivs.length; i++) {
+                allDivs[i].style.display = "none";
+                allDivs[i].value = "";
+                }
+            }
+        }
+
+    function twoPhraseMode() {
+        const check = document.getElementById("simple_toggle");
+        const check2 = document.getElementById("twophrase_toggle");
+        const onephrasetemp = document.getElementById("onephrase");
+        const twophrasetemp = document.getElementById("twophrase");
+        const compcat = document.getElementById("compcat");
+        const message = document.getElementById("Message");
+        check2.onchange = function() {
+            if (check2.checked) {
+                check.checked = false;
+                simpleComplex();
+                onephrasetemp.style.display = "none";
+                twophrasetemp.style.display = "inline-block";
+                compcat.style.display = "inline-block";
+                conjunction = '';
+            }
+            else {
+                onephrasetemp.style.display = "inline-block";
+                twophrasetemp.style.display = "none";
+                compcat.style.display = "none";
+                const allDivs = document.getElementsByClassName("hidden3")
+                for (var i = 0; i < allDivs.length; i++) {
+                allDivs[i].style.display = "none";
+                allDivs[i].value = "";
+                }
+                phrase2 = '';
+                template3 = '';
+                phraseHandler();
+            }
+        }
+    }
+
+    function updateTemplate() { //Change the active first template when the user chooses a new option.
+        var temp = document.getElementById("Templates");
+        var simple_toggle = document.getElementById("simple_toggle");
+        temp.onchange = function() {
+            template1 = temp.value;
+            phraseHandler();
+        }
+    }
+
+    function updateTemplate2() { //Change the active second template when the user chooses a new option.
+        var temp2 = document.getElementById("Templates2");
+        temp2.onchange = function() {
+            template2 = temp2.value;
+            phraseHandler();
+         }
+    }
+
+    function updateTemplate3() { //Change the active two-phrase template when the user chooses a new option.
+        var temp3 = document.getElementById("TwoPhraseTemplates");
+        temp3.onchange = function() {
+            template3 = temp3.value;
+            phraseHandler();
+        }
+    }
+    
+    function updateConjunc() { //Change the active selected conjunction in complex mode, but only if a second phrase has already been selected. 
+        var con = document.getElementById("Conjunctions");
+        con.onchange = function() {
+            conjunction = con.value;
+            if (phrase2 !== "" && phrase1 !== "") {
+                phraseHandler();
+            }
+        }
+        
+    }
+
+    function updatePhrase() { //Change the active selected first phrase whenever the user chooses a new option.
+       document.getElementById("mamaCat").addEventListener('change', function(event) {
+        var elem = event.target;
+        phrase1 = elem.value;
+        if (phrase2 === '') {
+            conjunction = '';
+        }
+        phraseHandler();
+       });
+    }
+
+    function updatePhrase2() { //Change the active selected second phrase whenever the user chooses a new option, but only if a conjunction has been selected.
+       document.getElementById("mamaCat2").addEventListener('change', function(event) {
+        var elem = event.target;
+        if (elem.id === "People_select2") {
+            personFlag = true;
+        } 
+        else {
+            personFlag = false;
+        }
+        phrase2 = elem.value;
+        phraseHandler();
+       });
+    }
+
+    function phraseHandler() { //Finalize the phrase and show it to the user.
+        const message = document.getElementById("Message");
+        const simple_toggle = document.getElementById("simple_toggle");
+        const twophrase_toggle = document.getElementById("twophrase_toggle");
+        const iCheck = /^I\s|^I\'/;
+        let final = "";
+        let final2 = "";
+        let temp3_1 = "";
+        let temp3_2 = "";
+        if (!twophrase_toggle.checked) {
+            if (phrase1 !== '') { 
+                final = template1.replace(/\*\*\*\*/, function() {
+                    return phrase1;
+                });
+            }
+            if (phrase2 !== '') {
+                final2 = template2.replace(/\*\*\*\*/, function() {
+                    return phrase2;
+                });
+            }
+            if (phrase1 !== "digimint") {
+                final = final.charAt(0).toUpperCase() + final.slice(1);
+            }
+            if (!final2.match(iCheck) && !personFlag) {
+                final2 = final2.charAt(0).toLowerCase() + final2.slice(1);
+            }
+            if (final === '' && conjunction === '' && final2 === '') {
+                final = "Soup";
+                message.innerHTML = `YOUR SOUP MESSAGE: ${final} ${conjunction} ${final2}`;
+            }
+            if (simple_toggle.checked && conjunction === '' && final2 === '') {
+                conjunction = "and";
+                final2 = "soup";
+                message.innerHTML = `YOUR SOUP MESSAGE: ${final} ${conjunction} ${final2}`;
+            }
+            if (!simple_toggle.checked && final !== '') {
+                message.innerHTML = `YOUR SOUP MESSAGE: ${final} ${conjunction} ${final2}`;
+            }
+            if (simple_toggle.checked && final !== '' && conjunction !== "" && final2 === '') {
+                final2 = 'soup'
+                message.innerHTML = `YOUR SOUP MESSAGE: ${final} ${conjunction} ${final2}`;
+            }
+            if (simple_toggle.checked && final !== '' && final2 !== '') {
+                message.innerHTML = `YOUR SOUP MESSAGE: ${final} ${conjunction} ${final2}`;
+            }
+        }
+        else {
+            /*if (phrase1 !== "digimint") { //This code will capitalize the first letter of the first phrase in a two-phrase template. I'm undecided whether I want this to happen yet or not.
+                phrase1 = phrase1.charAt(0).toUpperCase() + phrase1.slice(1);
+            }*/
+            if (phrase2 === '' && template3 === '') {
+                phrase2 = 'soup';
+                template3 = "This **** is ****, isn't it?";
+            }
+            if (!phrase2.match(iCheck) && !personFlag) {
+                phrase2 = phrase2.charAt(0).toLowerCase() + phrase2.slice(1);
+            }
+            if (phrase1 !== '' && phrase2 !== '') {
+                temp3_1 = template3.replace(/\*\*\*\*/, function() {
+                    return phrase1;
+                });
+                temp3_2 = temp3_1.replace(/\*\*\*\*/, function() {
+                    return phrase2;
+                });
+            message.innerHTML = `YOUR SOUP MESSAGE: ${temp3_2}`;
+            }
+        }
+    }
+    function clipboardCopy() {
+        const butt = document.getElementById("clipboard");
+        const message = document.getElementById("Message");
+        butt.onclick = function() {
+                let clip = message.innerHTML
+                clip = clip.replace(/YOUR SOUP MESSAGE:\s/, '');
+                clip = clip.replace(/[ ]+$/, '');
+                navigator.clipboard.writeText(clip);
+        }
+    }
+
+    
+    createArrayFromJSON();
+    showHide();
+    showHide2();
+    updatePhrase();
+    updatePhrase2();
+    updateTemplate();
+    updateTemplate2();
+    updateTemplate3();
+    updateConjunc();
+    phraseHandler();
+    simpleListener();
+    twoPhraseMode();
+    clipboardCopy();
+</script>
+
+<p id="toggles">
+<label for="simple_toggle">Complex message</label>
+<input type="checkbox" id="simple_toggle" autocomplete="off"><br>
+<label for="twophrase_toggle">Two-phrase template mode</label>
+<input type="checkbox" id="twophrase_toggle" autocomplete="off">
+</p>
+
+<p style="position:relative;">
+<span id="onephrase">
+<label for="Templates">Select template:</label>
+<select id="Templates" size="1"></select>
+</span>
+
+<span id="comptemp" class="hidden2" style="position:absolute; padding-left: 190px;">
+<label for="Templates2">Select second template:</label>
+<select id="Templates2" size="1"></select>
+</span>
+
+<div id="twophrase" class="hidden4" style="padding-left: 82px;">
+<label for="TwoPhraseTemplates">Select two-phrase template:</label>
+<select id="TwoPhraseTemplates" size="1"></select>
+</div>
+</p>
+
+<label for="Categories">Choose a category of phrase:</label>
+<select id="Categories" size="5"></select>
+&emsp;
+<span id="compconj" class="hidden2">
+<label for="Conjunctions">Choose a conjunction:</label>
+<select id="Conjunctions" size="1"></select>
+&emsp;
+</span>
+<span id="compcat" class="hidden4">
+<label for="Categories2">Choose a second category of phrase:</label>
+<select id="Categories2" size="5"></select>
+</span>
+<br></br>
+
+<span style="position:relative;">
+<div id="mamaCat"> <!--Step 4 here!-->
+    <div id="Things" class="hidden">
+    <label for="Things_select">Things:</label>
+    <select id="Things_select"></select>
+    </div>
+
+    <div id="People" class="hidden">
+    <label for="People_select">People:</label>
+    <select id="People_select"></select>
+    </div>
+
+    <div id="Animals" class="hidden">
+    <label for="Animals_select">Animals:</label>
+    <select id="Animals_select"></select>
+    </div>
+
+    <div id="Sayings" class="hidden">
+    <label for="Sayings_select">Sayings:</label>
+    <select id="Sayings_select"></select>
+    </div>
+
+    <div id="Attacks" class="hidden">
+    <label for="Attacks_select">Attacks:</label>
+    <select id="Attacks_select"></select>
+    </div>
+</div>
+
+<div id="mamaCat2"> <!--They are lesbians.-->
+    <div id="Things2" class="hidden3">
+    <label for="Things_select2">Things:</label>
+    <select id="Things_select2"></select>
+    </div>
+
+    <div id="People2" class="hidden3">
+    <label for="People_select2">People:</label>
+    <select id="People_select2"></select>
+    </div>
+
+    <div id="Animals2" class="hidden3">
+    <label for="Animals_select2">Animals:</label>
+    <select id="Animals_select2"></select>
+    </div>
+
+    <div id="Sayings2" class="hidden3">
+    <label for="Sayings_select2">Sayings:</label>
+    <select id="Sayings_select2"></select>
+    </div>
+
+    <div id="Attacks2" class="hidden3">
+    <label for="Attacks_select2">Attacks:</label>
+    <select id="Attacks_select2"></select>
+    </div>
+</div>
+</span>
+
+<br></br>
+
+<p id="Message"></p>
+
+<div style="position:relative; padding-bottom:20px;">
+<button type="button" id="clipboard">Copy to clipboard, traveler...</button>
+</div>
+</div>
+<div id="Readme" class="article">
+    <p>🔰 <a href="readme.html">How does this work?</a></p>    
+</div>
+<div id="Credits" class="article">
+    <p>Based on (but not affiliated with) the messaging system of FromSoftware's Dark Souls™ series<br>
+        and the Easy Chat system from the Pokémon franchise.<br><br>
+    Background image by Jesse Maccabe of <a href="https://artisticpov.jessemaccabe.com/stylized-cobblestone-texture/">ArtisticPOV</a>.
+    </p>
+</div>
+</div>
+</body>
+</html>
